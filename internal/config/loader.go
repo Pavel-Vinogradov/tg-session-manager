@@ -30,5 +30,9 @@ func LoadConfig() AppConfig {
 		ServerPort:     viper.GetInt("SERVER_PORT"),
 	}
 
+	cfg.TelegramServer = &TelegramConfig{
+		ApiId:   viper.GetInt("TELEGRAM_API_ID"),
+		ApiHash: viper.GetString("TELEGRAM_API_HASH"),
+	}
 	return cfg
 }

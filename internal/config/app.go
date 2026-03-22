@@ -7,7 +7,8 @@ import (
 
 type (
 	AppConfig struct {
-		GrpcServer *GrpcConfig
+		GrpcServer     *GrpcConfig
+		TelegramServer *TelegramConfig
 	}
 	AppService struct {
 		Config AppConfig

@@ -4,6 +4,7 @@ type (
 	Services struct {
 		App        *AppService
 		GrpcServer *GrpcServer
+		Telegram   *TelegramService
 		Warnings   []string
 	}
 
@@ -34,6 +35,7 @@ func NewConfigurations() (s *Services) {
 			runServiceChain([]configurator{
 				{member: NewAppService(), union: unions},
 				{member: NewGrpcServer(), union: unions},
+				{member: NewTelegramService(), union: unions},
 			}...)
 		},
 	}
