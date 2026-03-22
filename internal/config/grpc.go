@@ -24,7 +24,7 @@ func NewGrpcServer() *ServiceChainMember {
 
 func (g *GrpcServer) Health() error {
 	if g.Server() == nil {
-		return errors.New("grpc server is nil")
+		return errors.New("grpc handler is nil")
 	}
 
 	return nil
