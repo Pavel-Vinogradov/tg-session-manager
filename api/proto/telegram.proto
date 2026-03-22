@@ -2,6 +2,8 @@ edition = "2023";
 
 package pact.telegram;
 
+option go_package = "tg-session-manager/api/proto;proto";
+
 service TelegramService {
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
   rpc DeleteSession(DeleteSessionRequest) returns (DeleteSessionResponse);
