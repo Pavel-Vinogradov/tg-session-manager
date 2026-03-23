@@ -19,14 +19,12 @@ func LoadConfig() *AppConfig {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	viper.SetDefault("GRPC_SERVER_PORT", 50051)
-	viper.SetDefault("SERVER_PORT", 8080)
 
 	if err := viper.ReadInConfig(); err != nil {
 		logrus.Warnf("Config file not found, using defaults: %v", err)
 	}
 
 	cfg.GrpcServer.GRPCServerPort = viper.GetInt("GRPC_SERVER_PORT")
-	cfg.GrpcServer.ServerPort = viper.GetInt("SERVER_PORT")
 	cfg.TelegramServer.ApiId = viper.GetInt("TELEGRAM_API_ID")
 	cfg.TelegramServer.ApiHash = viper.GetString("TELEGRAM_API_HASH")
 

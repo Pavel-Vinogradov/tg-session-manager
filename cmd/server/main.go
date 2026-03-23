@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load()
+	godotenv.Load()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

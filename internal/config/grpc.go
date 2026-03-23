@@ -3,7 +3,6 @@ package config
 type (
 	GrpcConfig struct {
 		GRPCServerPort int `mapstructure:"grpc_port"`
-		ServerPort     int `mapstructure:"server_port"`
 	}
 )
 
