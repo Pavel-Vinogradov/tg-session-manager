@@ -6,6 +6,8 @@ import (
 	"tg-session-manager/internal/interfaces/telegram"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type TelegramHandler struct {
@@ -22,7 +24,7 @@ func NewTelegramHandler(telegramService telegram.Service) *TelegramHandler {
 func (s *TelegramHandler) CreateSession(ctx context.Context, req *proto.CreateSessionRequest) (*proto.CreateSessionResponse, error) {
 	sessionId, qrCode, err := s.telegramService.CreateSession()
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to create session")
 	}
 
 	return &proto.CreateSessionResponse{
@@ -37,9 +39,13 @@ func (s *TelegramHandler) DeleteSession(ctx context.Context, req *proto.DeleteSe
 		sessionId = *req.SessionId
 	}
 
+	if sessionId == "" {
+		return nil, status.Error(codes.InvalidArgument, "session_id is required")
+	}
+
 	err := s.telegramService.DeleteSession(sessionId)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to delete session")
 	}
 
 	return &proto.DeleteSessionResponse{}, nil
@@ -54,9 +60,17 @@ func (s *TelegramHandler) SendMessage(ctx context.Context, req *proto.SendMessag
 		text = *req.Text
 	}
 
+	if sessionId == "" {
+		return nil, status.Error(codes.InvalidArgument, "session_id is required")
+	}
+
+	if text == "" {
+		return nil, status.Error(codes.InvalidArgument, "message text is required")
+	}
+
 	err := s.telegramService.SendMessage(sessionId, text)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to send message")
 	}
 
 	return &proto.SendMessageResponse{}, nil
