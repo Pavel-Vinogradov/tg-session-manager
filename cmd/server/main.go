@@ -14,11 +14,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	_ = config.LoadConfig()
-	servicesConfig := config.NewConfigurations()
-	if servicesConfig == nil {
-		logrus.Fatalf("failed to init services: check config.yaml")
-	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -31,7 +27,7 @@ func main() {
 		cancel()
 	}()
 
-	app, err := cli.NewApp(servicesConfig)
+	app, err := cli.NewApp(config.LoadConfig())
 	if err != nil {
 		logrus.Fatalf("failed to create app: %v", err)
 	}
@@ -40,5 +36,4 @@ func main() {
 	app.RunGrpc(server)
 
 	<-ctx.Done()
-
 }

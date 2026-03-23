@@ -4,6 +4,7 @@ import (
 	"net"
 	"tg-session-manager/api/proto"
 	"tg-session-manager/internal/config"
+	"tg-session-manager/internal/container"
 	"tg-session-manager/internal/handler"
 
 	"github.com/sirupsen/logrus"
@@ -13,22 +14,21 @@ import (
 
 type (
 	App struct {
-		*config.Services
+		container *container.Container
 	}
 )
 
-func NewApp(servicesConfig *config.Services) (*App, error) {
+func NewApp(cfg *config.AppConfig) (*App, error) {
 	app := &App{
-		Services: servicesConfig,
+		container: container.NewContainer(cfg),
 	}
 	return app, nil
-
 }
 
 func (app *App) RegisterServiceServer() *grpc.Server {
-	server := app.GrpcServer.Server()
+	server := app.container.GrpcSrv.Server()
 
-	proto.RegisterTelegramServiceServer(server, handler.NewTelegramHandler(app.Telegram))
+	proto.RegisterTelegramServiceServer(server, handler.NewTelegramHandler(app.container.TelegramSvc))
 
 	reflection.Register(server)
 
@@ -37,7 +37,7 @@ func (app *App) RegisterServiceServer() *grpc.Server {
 
 func (app *App) RunGrpc(server *grpc.Server) {
 	go func() {
-		listener, err := net.Listen("tcp", app.GrpcServer.Address())
+		listener, err := net.Listen("tcp", app.container.GrpcSrv.Address())
 
 		if err != nil {
 			logrus.Errorf("failed to listen: %v", err)

@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func LoadConfig() AppConfig {
-	cfg := AppConfig{}
+func LoadConfig() *AppConfig {
+	cfg := NewAppConfig()
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("configs")
@@ -25,14 +25,10 @@ func LoadConfig() AppConfig {
 		logrus.Warnf("Config file not found, using defaults: %v", err)
 	}
 
-	cfg.GrpcServer = &GrpcConfig{
-		GRPCServerPort: viper.GetInt("GRPC_SERVER_PORT"),
-		ServerPort:     viper.GetInt("SERVER_PORT"),
-	}
+	cfg.GrpcServer.GRPCServerPort = viper.GetInt("GRPC_SERVER_PORT")
+	cfg.GrpcServer.ServerPort = viper.GetInt("SERVER_PORT")
+	cfg.TelegramServer.ApiId = viper.GetInt("TELEGRAM_API_ID")
+	cfg.TelegramServer.ApiHash = viper.GetString("TELEGRAM_API_HASH")
 
-	cfg.TelegramServer = &TelegramConfig{
-		ApiId:   viper.GetInt("TELEGRAM_API_ID"),
-		ApiHash: viper.GetString("TELEGRAM_API_HASH"),
-	}
 	return cfg
 }
