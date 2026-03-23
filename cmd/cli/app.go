@@ -28,7 +28,7 @@ func NewApp(cfg *config.AppConfig) (*App, error) {
 func (app *App) RegisterServiceServer() *grpc.Server {
 	server := app.container.GrpcSrv.Server()
 
-	proto.RegisterTelegramServiceServer(server, handler.NewTelegramHandler(app.container.TelegramSvc))
+	proto.RegisterTelegramServiceServer(server, handler.NewTelegramHandler(app.container.TelegramSvc, app.container.SessionManager))
 
 	reflection.Register(server)
 
