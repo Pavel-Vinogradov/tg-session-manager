@@ -27,6 +27,7 @@ func LoadConfig() *AppConfig {
 	cfg.GrpcServer.GRPCServerPort = viper.GetInt("GRPC_SERVER_PORT")
 	cfg.TelegramServer.ApiId = viper.GetInt("TELEGRAM_API_ID")
 	cfg.TelegramServer.ApiHash = viper.GetString("TELEGRAM_API_HASH")
+	cfg.TelegramServer.SessionDir = viper.GetString("SESSION_DIR")
 
 	return cfg
 }

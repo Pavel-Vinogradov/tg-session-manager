@@ -5,6 +5,7 @@ import (
 	"tg-session-manager/internal/infrastructure/repository"
 	"tg-session-manager/internal/interfaces/telegram"
 
+	"github.com/gotd/td/session"
 	tdtelegram "github.com/gotd/td/telegram"
 )
 
@@ -17,10 +18,15 @@ type (
 )
 
 func NewTelegramService(cfg *config.TelegramConfig) telegram.Service {
+
+	storage := &session.FileStorage{Path: cfg.SessionDir}
+
 	client := tdtelegram.NewClient(
 		cfg.ApiId,
 		cfg.ApiHash,
-		tdtelegram.Options{},
+		tdtelegram.Options{
+			SessionStorage: storage,
+		},
 	)
 
 	return &TelegramService{
