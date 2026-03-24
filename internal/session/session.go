@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	tdtelegram "github.com/gotd/td/telegram"
+	"github.com/sirupsen/logrus"
 )
 
 type (
@@ -113,6 +114,14 @@ func (sm *ManagerSession) DeleteSession(id string) bool {
 	sess, ok := sm.sessions[id]
 	if !ok {
 		return false
+	}
+
+	if sess.Client != nil && sess.IsActive() {
+		api := sess.Client.API()
+		_, err := api.AuthLogOut(sess.Ctx)
+		if err != nil {
+			logrus.Fatal("Failed to logout session %s: %v", id, err)
+		}
 	}
 
 	sess.Stop()
